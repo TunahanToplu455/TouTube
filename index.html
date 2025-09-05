@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>TouTube - Ana Sayfa</title>
+<link rel="stylesheet" href="style.css" />
+</head>
+<body>
+
+<header>
+  <h1>TouTube</h1>
+  <nav>
+    <a href="index.html">Ana Sayfa</a>
+    <a href="upload.html">Video Yükle</a>
+  </nav>
+</header>
+
+<main>
+  <h2>Videolar</h2>
+  <div id="videoList" class="video-list"></div>
+</main>
+
+<script>
+  const videoListEl = document.getElementById("videoList");
+
+  function loadVideos() {
+    const videos = JSON.parse(localStorage.getItem("videos") || "[]");
+    videoListEl.innerHTML = "";
+    if (videos.length === 0) {
+      videoListEl.innerHTML = "<p>Henüz video yok.</p>";
+      return;
+    }
+    videos.forEach((v, i) => {
+      const videoEl = document.createElement("div");
+      videoEl.className = "video-card";
+      videoEl.innerHTML = `
+        <video width="320" height="180" controls>
+          <source src="${v.url}" type="${v.type}" />
+          Tarayıcınız video etiketini desteklemiyor.
+        </video>
+        <h3>${v.title}</h3>
+        <p>${v.description}</p>
+      `;
+      videoListEl.appendChild(videoEl);
+    });
+  }
+
+  window.onload = loadVideos;
+</script>
+
+</body>
+</html>
