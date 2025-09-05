@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>TouTube - Video Yükle</title>
+<link rel="stylesheet" href="style.css" />
+</head>
+<body>
+
+<header>
+  <h1>TouTube</h1>
+  <nav>
+    <a href="index.html">Ana Sayfa</a>
+    <a href="upload.html">Video Yükle</a>
+  </nav>
+</header>
+
+<main>
+  <h2>Video Yükle</h2>
+  <form id="uploadForm">
+    <label>Video Başlığı</label>
+    <input type="text" id="title" required />
+
+    <label>Açıklama</label>
+    <textarea id="description" required></textarea>
+
+    <label>Video Dosyası</label>
+    <input type="file" id="videoFile" accept="video/*" required />
+
+    <button type="submit">Yükle</button>
+  </form>
+  <p id="message" style="color:green;"></p>
+</main>
+
+<script>
+  document.getElementById("uploadForm").addEventListener("submit", function(e) {
+    e.preventDefault();  // Formun normal gönderimini engelle
+
+    const title = document.getElementById("title").value.trim();
+    const description = document.getElementById("description").value.trim();
+    const videoFile = document.getElementById("videoFile").files[0];
+
+    if (!videoFile) {
+      alert("Lütfen video dosyası seçin.");
+      return;
+    }
+
+    const reader = new FileReader();
+    reader.onload = function(event) {
+      const videoURL = event.target.result;
+      let videos = JSON.parse(localStorage.getItem("videos") || "[]");
+      videos.push({
+        title: title,
+        description: description,
+        url: videoURL,
+        type: videoFile.type,
+      });
+      localStorage.setItem("videos", JSON.stringify(videos));
+
+      document.getElementById("message").textContent = "Video başarıyla yüklendi! Ana sayfaya gidin.";
+      document.getElementById("uploadForm").reset();
+    };
+    reader.readAsDataURL(videoFile);
+  });
+</script>
+
+</body>
+</html>
